@@ -31,7 +31,6 @@ import org.hamcrest.CoreMatchers.not
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import java.util.LinkedList
 
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) {
@@ -136,15 +135,15 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
             givenThereAreSomeSuperHeroes(numberOfAvengers, avengers = true)
 
     private fun givenThereAreSomeSuperHeroes(numberOfSuperHeroes: Int = ANY_NUMBER_OF_SUPER_HEROES, avengers: Boolean = false): List<SuperHero> {
-        val superHeroes = LinkedList<SuperHero>()
-        IntRange(0, numberOfSuperHeroes).map {
+        val superHeroes = IntRange(0, numberOfSuperHeroes - 1).map {
             val superHeroName = "SuperHero - " + it
             val superHeroPhoto = "https://i.annihil.us/u/prod/marvel/i/mg/c/60/55b6a28ef24fa.jpg"
             val superHeroDescription = "Description Super Hero - " + it
             val superHero = SuperHero(superHeroName, superHeroPhoto, avengers, superHeroDescription)
-            superHeroes.add(superHero)
-            on(repository.getByName(superHeroName)).thenReturn(superHero)
+            superHero
         }
+
+        superHeroes.forEach { on(repository.getByName(it.name)).thenReturn(it) }
         on(repository.getAllSuperHeroes()).thenReturn(superHeroes)
         return superHeroes
     }
