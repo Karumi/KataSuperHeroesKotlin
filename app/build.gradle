@@ -18,6 +18,11 @@ android {
             minifyEnabled false
         }
     }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+        androidTest.java.srcDirs += "src/androidTest/kotlin"
+    }
 }
 
 configurations {
@@ -43,7 +48,7 @@ dependencies {
     androidTestCompile 'org.mockito:mockito-android:2.9.0'
     androidTestCompile 'org.mockito:mockito-core:2.10.0'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
-    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:3.0.1') {
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:3.0.1') {
         exclude group: 'com.android.support'
     }
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.1'
