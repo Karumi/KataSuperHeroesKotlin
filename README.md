@@ -1,9 +1,9 @@
-![Karumi logo][karumilogo] KataSuperHeroes for Android. [![Build Status](https://travis-ci.org/Karumi/KataSuperHeroesAndroid.svg?branch=master)](https://travis-ci.org/Karumi/KataSuperHeroesAndroid)
+![Karumi logo][karumilogo] KataSuperHeroes in Kotlin. [![Build Status](https://travis-ci.org/Karumi/KataSuperHeroesKotlin.svg?branch=master)](https://travis-ci.org/Karumi/KataSuperHeroesKotlin)
 ============================
 
 - We are here to practice UI Testing.
 - We are going to use [Espresso][espresso] to interact with the Application UI.
-- We are going to use [Dagger2][dagger2] to replace production code with [Test Doubles][testDoubles].
+- We are going to use [Kodein][kodein] to replace production code with [Test Doubles][testDoubles].
 - We are going to practice pair programming.
 
 ---
@@ -25,12 +25,12 @@ This Application is based on two Activities:
 ![SuperHeroDetailActivityScreenshot][superHeroDetailActivityScreenshot]
 
 
-The application architecture, dependencies and configuration is ready to just start writing tests. In this project you'll find  ``Dagger2`` configured to be able to replace production code with test doubles easily and Espresso to be able to interact with the application user interface.
+The application architecture, dependencies and configuration is ready to just start writing tests. In this project you'll find  ``Kodein`` configured to be able to replace production code with test doubles easily and Espresso to be able to interact with the application user interface.
 
 
 ## Tasks
 
-Your task as Android Developer is to **write all the UI tests** needed to check if the Application UI is working as it should. 
+Your task as Android Developer is to **write all the UI tests** needed to check if the Application UI is working as expected. 
 
 **This repository is ready to build the application, pass the checkstyle and your tests in Travis-CI environments.**
 
@@ -44,31 +44,23 @@ Our recommendation for this exercise is:
     4. Execute `MainActivityTest` and watch the only test it contains pass.
 
   * To help you get started, these are some test cases for `MainActivity`:     
-    1. Setup mocked `SuperHeroesRepository` in `MainActivityTest` to return a list of some Super Heroes.
+    1. Setup mocked `SuperHeroRepository` in `MainActivityTest` to return a list of some Super Heroes.
     2. Test that RecyclerView is listing the correct number of elements when `SuperHeroesRepository` returns a list of some Super Heroes.
     3. Test that each of this elements contains the correct Super Hero name.
 
 ## Considerations
 
-* If you get stuck, `Master` branch contains already solved tests for `MainActivity` and `SuperHeroDetailActivity`
-
-* A [DaggerMockRule][daggermock] is an utility to let you create [Dagger 2][dagger2] modules dynamically. In this case we are using it to create a new `MainModule` in this testing scope. Instead of returning real objects, this new `MainModule` will returns the mock for `SuperHeroesRepository` defined in this test.
+* If you get stuck, `master` branch contains already solved tests for `MainActivity` and `SuperHeroDetailActivity`
 
 * You will find some utilities to help you test RecyclerViews and Toolbars easily in:
-  ``app/src/androidTest/java/com/karumi/katasuperheroes/matchers`` and ``app/src/androidTest/java/com/karumi/katasuperheroes/recyclerview``.
+  ``app/src/androidTest/java/com/karumi/matchers`` and ``app/src/androidTest/java/com/karumi/recyclerview``.
 
   * `RecyclerViewInteraction`: provides an easy way to apply an Espresso matcher to all of the RecyclerView elements
 
-	```java
-	
-	RecyclerViewInteraction.<ITEM_TYPE>onRecyclerView(withId(R.id.recycler_view))
-	.withItems(A_LIST_OF_ITEMS)
-	.check(new RecyclerViewInteraction.ItemViewAssertion<ITEM_TYPE>() {
-	    @Override
-	    public void check(ITEM_TYPE item, View view, NoMatchingViewException e) {
-	        matches(A_MATCHER).check(view, e);
-	    }
-	});
+	```kotlin
+	RecyclerViewInteraction.onRecyclerView<ITEM_TYPE>(withId(R.id.recycler_view))
+                .withItems(A_LIST_OF_ITEMS)
+                .check({ item, view, e -> matches(A_MATCHER).check(view, e) })
 	```
   * `RecyclerViewItemsCountMatcher`: a matcher that returns true if RecyclerView contains the expected number of elements.
 
@@ -89,6 +81,7 @@ If you've covered all the application functionality using UI tests try to contin
 
 There are some links which can be useful to finish these tasks:
 
+* [SuperHeroes Kata in Java][kataSuperHeroesJava]
 * [Android Testing Support Library official documentation][androidTestingDocumentation]
 * [Espresso Cheat Sheet][espressoCheatSheet]
 * [Espresso Idling Resources][espressoIdlingResources]
@@ -96,9 +89,9 @@ There are some links which can be useful to finish these tasks:
 * [Finding UI views][findingUIViews]
 * [Espresso Test Toolbar Title][toolbarMatcher]
 
-Data provided by Marvel. © 2016 MARVEL
+Data provided by Marvel. © 2017 MARVEL
 
-#License
+# License
 
 Copyright 2016 Karumi
 
@@ -116,7 +109,6 @@ limitations under the License.
 
 [karumilogo]: https://cloud.githubusercontent.com/assets/858090/11626547/e5a1dc66-9ce3-11e5-908d-537e07e82090.png
 [espresso]: https://google.github.io/android-testing-support-library/docs/
-[dagger2]: http://google.github.io/dagger/
 [testDoubles]: http://www.martinfowler.com/bliki/TestDouble.html
 [applicationScreencast]: ./art/ApplicationScreencast.gif
 [mainActivityScreenshot]: ./art/MainActivityScreenshot.png
@@ -127,5 +119,4 @@ limitations under the License.
 [espressoCustomMatchers]: http://blog.xebia.com/android-custom-matchers-in-espresso/
 [findingUIViews]: http://www.adavis.info/2015/12/testing-tricks-2-finding-ui-views.html?utm_source=Android+Weekly&utm_campaign=9ed0cecaff-Android_Weekly_186&utm_medium=email&utm_term=0_4eb677ad19-9ed0cecaff-337845529
 [toolbarMatcher]: http://blog.sqisland.com/2015/05/espresso-match-toolbar-title.html
-[daggermock]: https://github.com/fabioCollini/DaggerMock
-
+[kataSuperHeroesJava]: https://github.com/Karumi/KataSuperHeroesAndroid
