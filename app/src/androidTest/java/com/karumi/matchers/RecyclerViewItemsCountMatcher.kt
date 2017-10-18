@@ -6,7 +6,6 @@ import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 
-
 class RecyclerViewItemsCountMatcher(private val expectedItemCount: Int) : BaseMatcher<View>() {
 
     override fun matches(item: Any): Boolean {
