@@ -2,7 +2,7 @@ language: android
 sudo: required
 env:
   global:
-    - ADB_INSTALL_TIMEOUT=8 # 8 minutes (2 minutes by default)
+    - ADB_INSTALL_TIMEOUT=8 # 8 minutes (2 minutes by default) 
 
 jdk:
   - oraclejdk8
