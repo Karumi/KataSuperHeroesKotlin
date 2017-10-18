@@ -10,7 +10,7 @@ import android.view.View
 class RecyclerItemViewAssertion<A>(
         private val position: Int,
         private val item: A,
-        private val itemViewAssertion: RecyclerViewInteraction.ItemViewAssertion<A>) : ViewAssertion {
+        private val assertion: (item: A, view: View, e: NoMatchingViewException?) -> Unit) : ViewAssertion {
 
     override fun check(view: View, e: NoMatchingViewException?) {
         val recyclerView = view as RecyclerView
@@ -23,7 +23,7 @@ class RecyclerItemViewAssertion<A>(
                     .build()
         } else {
             val viewAtPosition = viewHolderForPosition.itemView
-            itemViewAssertion.check(item, viewAtPosition, e)
+            assertion(item, viewAtPosition, e)
         }
     }
 }

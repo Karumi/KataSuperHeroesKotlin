@@ -1,7 +1,6 @@
 package com.karumi
 
 import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.NoMatchingViewException
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
@@ -53,11 +52,7 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
 
         RecyclerViewInteraction.onRecyclerView<SuperHero>(withId(R.id.recycler_view))
                 .withItems(superHeroes)
-                .check(object : RecyclerViewInteraction.ItemViewAssertion<SuperHero> {
-                    override fun check(item: SuperHero, view: View, e: NoMatchingViewException?) {
-                        matches(hasDescendant(withText(item.name))).check(view, e)
-                    }
-                })
+                .check({ (name), view, e -> matches(hasDescendant(withText(name))).check(view, e) })
     }
 
     @Test
@@ -68,11 +63,9 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
 
         RecyclerViewInteraction.onRecyclerView<SuperHero>(withId(R.id.recycler_view))
                 .withItems(superHeroes)
-                .check(object : RecyclerViewInteraction.ItemViewAssertion<SuperHero> {
-                    override fun check(item: SuperHero, view: View, e: NoMatchingViewException?) {
-                        matches(hasDescendant(allOf<View>(withId(R.id.iv_avengers_badge),
-                                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))).check(view, e)
-                    }
+                .check({ _, view, e ->
+                    matches(hasDescendant(allOf<View>(withId(R.id.iv_avengers_badge),
+                            withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))).check(view, e)
                 })
     }
 
@@ -84,11 +77,9 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
 
         RecyclerViewInteraction.onRecyclerView<SuperHero>(withId(R.id.recycler_view))
                 .withItems(superHeroes)
-                .check(object : RecyclerViewInteraction.ItemViewAssertion<SuperHero> {
-                    override fun check(item: SuperHero, view: View, e: NoMatchingViewException?) {
-                        matches(hasDescendant(allOf<View>(withId(R.id.iv_avengers_badge),
-                                withEffectiveVisibility(ViewMatchers.Visibility.GONE)))).check(view, e)
-                    }
+                .check({ _, view, e ->
+                    matches(hasDescendant(allOf<View>(withId(R.id.iv_avengers_badge),
+                            withEffectiveVisibility(ViewMatchers.Visibility.GONE)))).check(view, e)
                 })
     }
 

@@ -7,8 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import org.hamcrest.Matcher
 
-class RecyclerViewInteraction<A> private constructor(
-        private val viewMatcher: Matcher<View>) {
+class RecyclerViewInteraction<A> private constructor(private val viewMatcher: Matcher<View>) {
 
     private lateinit var items: List<A>
 
@@ -17,17 +16,13 @@ class RecyclerViewInteraction<A> private constructor(
         return this
     }
 
-    fun check(itemViewAssertion: ItemViewAssertion<A>): RecyclerViewInteraction<A> {
+    fun check(assertion: (item: A, view: View, e: NoMatchingViewException?) -> Unit): RecyclerViewInteraction<A> {
         for (i in items.indices) {
             onView(viewMatcher)
                     .perform(scrollToPosition<RecyclerView.ViewHolder>(i))
-                    .check(RecyclerItemViewAssertion(i, items[i], itemViewAssertion))
+                    .check(RecyclerItemViewAssertion(i, items[i], assertion))
         }
         return this
-    }
-
-    interface ItemViewAssertion<in A> {
-        fun check(item: A, view: View, e: NoMatchingViewException?)
     }
 
     companion object {
