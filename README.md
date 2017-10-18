@@ -1,4 +1,4 @@
-![Karumi logo][karumilogo] KataSuperHeroes in Kotlin. [![Build Status](https://travis-ci.org/Karumi/KataSuperHeroesKotlin.svg?branch=master)](https://travis-ci.org/Karumi/KataSuperHeroesKotlin)
+![Karumi logo][karumilogo] KataSuperHeroes in Kotlin [![Build Status](https://travis-ci.org/Karumi/KataSuperHeroesKotlin.svg?branch=master)](https://travis-ci.org/Karumi/KataSuperHeroesKotlin)
 ============================
 
 - We are here to practice UI Testing.
