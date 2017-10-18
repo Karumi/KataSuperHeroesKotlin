@@ -11,12 +11,17 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "com.karumi.InjectedTestRunner"
+        testInstrumentationRunner 'com.github.tmurakami.dexopener.DexOpenerAndroidJUnitRunner'
     }
     buildTypes {
         release {
             minifyEnabled false
         }
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+        androidTest.java.srcDirs += "src/androidTest/kotlin"
     }
 }
 
@@ -42,13 +47,16 @@ dependencies {
 
     androidTestCompile 'org.mockito:mockito-android:2.9.0'
     androidTestCompile 'org.mockito:mockito-core:2.10.0'
-    androidTestCompile ('com.android.support.test.espresso:espresso-core:3.0.1') {
-        exclude group: 'com.android.support', module: 'support-annotations'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:3.0.1') {
+        exclude group: 'com.android.support'
     }
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.1'
+    androidTestCompile 'com.github.tmurakami:dexopener:0.12.0'
+}
 
-    androidTestCompile('com.github.tmurakami:dexopener:0.12.0') {
-        exclude group: 'com.android.support.test', module: 'runner'
-    }
+configurations.all {
+    resolutionStrategy.force 'com.android.support:support-annotations:23.0.1'
 }
 
 task ktlint(type: JavaExec) {
