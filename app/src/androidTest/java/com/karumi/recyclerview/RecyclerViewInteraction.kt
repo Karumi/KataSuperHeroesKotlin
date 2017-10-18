@@ -9,6 +9,11 @@ import org.hamcrest.Matcher
 
 class RecyclerViewInteraction<A> private constructor(private val viewMatcher: Matcher<View>) {
 
+    companion object {
+        fun <A> onRecyclerView(viewMatcher: Matcher<View>): RecyclerViewInteraction<A> =
+                RecyclerViewInteraction(viewMatcher)
+    }
+
     private lateinit var items: List<A>
 
     fun withItems(items: List<A>): RecyclerViewInteraction<A> {
@@ -17,16 +22,11 @@ class RecyclerViewInteraction<A> private constructor(private val viewMatcher: Ma
     }
 
     fun check(assertion: (item: A, view: View, e: NoMatchingViewException?) -> Unit): RecyclerViewInteraction<A> {
-        for (i in items.indices) {
+        items.indices.map {
             onView(viewMatcher)
-                    .perform(scrollToPosition<RecyclerView.ViewHolder>(i))
-                    .check(RecyclerItemViewAssertion(i, items[i], assertion))
+                    .perform(scrollToPosition<RecyclerView.ViewHolder>(it))
+                    .check(RecyclerItemViewAssertion(it, items[it], assertion))
         }
         return this
-    }
-
-    companion object {
-        fun <A> onRecyclerView(viewMatcher: Matcher<View>): RecyclerViewInteraction<A> =
-                RecyclerViewInteraction(viewMatcher)
     }
 }

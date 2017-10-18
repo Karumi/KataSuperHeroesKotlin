@@ -68,7 +68,7 @@ class SuperHeroDetailActivityTests : AcceptanceTest<SuperHeroDetailActivity>(Sup
 
     @Test
     fun doesNotShowAvengersBadgeIfSuperHeroIsNotPartOfTheAvengersTeam() {
-        val superHero = givenThereIsASuperHero(false)
+        val superHero = givenThereIsASuperHero(isAvenger = false)
 
         startActivity(superHero)
 
@@ -84,7 +84,7 @@ class SuperHeroDetailActivityTests : AcceptanceTest<SuperHeroDetailActivity>(Sup
         onView(withId(R.id.iv_avengers_badge)).check(matches(isDisplayed()))
     }
 
-    private fun givenAnAvenger(): SuperHero = givenThereIsASuperHero(true)
+    private fun givenAnAvenger(): SuperHero = givenThereIsASuperHero(isAvenger = true)
 
     private fun givenThereIsASuperHero(isAvenger: Boolean = false): SuperHero {
         val superHeroName = "SuperHero"

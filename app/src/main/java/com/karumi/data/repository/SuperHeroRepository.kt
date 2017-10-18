@@ -4,12 +4,12 @@ import android.util.Log
 import com.karumi.domain.model.SuperHero
 
 class SuperHeroRepository {
-    private val superHeroes: List<SuperHero>
-
     companion object {
         private val BIT_TIME = 1500L
         private val TAG = "SuperHeroRepository"
     }
+
+    private val superHeroes: List<SuperHero>
 
     init {
         superHeroes = fakeData()

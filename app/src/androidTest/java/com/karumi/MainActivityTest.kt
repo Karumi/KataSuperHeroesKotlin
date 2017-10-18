@@ -36,6 +36,10 @@ import java.util.LinkedList
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) {
 
+    companion object {
+        private val ANY_NUMBER_OF_SUPER_HEROES = 10
+    }
+
     @Mock lateinit var repository: SuperHeroRepository
 
     @Test
@@ -55,7 +59,7 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
 
         RecyclerViewInteraction.onRecyclerView<SuperHero>(withId(R.id.recycler_view))
                 .withItems(superHeroes)
-                .check({ (name), view, e -> matches(hasDescendant(withText(name))).check(view, e) })
+                .check({ (name), view, exception -> matches(hasDescendant(withText(name))).check(view, exception) })
     }
 
     @Test
@@ -66,23 +70,23 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
 
         RecyclerViewInteraction.onRecyclerView<SuperHero>(withId(R.id.recycler_view))
                 .withItems(superHeroes)
-                .check({ _, view, e ->
+                .check({ _, view, exception ->
                     matches(hasDescendant(allOf<View>(withId(R.id.iv_avengers_badge),
-                            withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))).check(view, e)
+                            withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))).check(view, exception)
                 })
     }
 
     @Test
     fun doesNotShowAvengersBadgeIfASuperHeroIsNotPartOfTheAvengersTeam() {
-        val superHeroes = givenThereAreSomeSuperHeroes(ANY_NUMBER_OF_SUPER_HEROES, false)
+        val superHeroes = givenThereAreSomeSuperHeroes(ANY_NUMBER_OF_SUPER_HEROES, avengers = false)
 
         startActivity()
 
         RecyclerViewInteraction.onRecyclerView<SuperHero>(withId(R.id.recycler_view))
                 .withItems(superHeroes)
-                .check({ _, view, e ->
+                .check({ _, view, exception ->
                     matches(hasDescendant(allOf<View>(withId(R.id.iv_avengers_badge),
-                            withEffectiveVisibility(ViewMatchers.Visibility.GONE)))).check(view, e)
+                            withEffectiveVisibility(ViewMatchers.Visibility.GONE)))).check(view, exception)
                 })
     }
 
@@ -129,14 +133,14 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
     }
 
     private fun givenThereAreSomeAvengers(numberOfAvengers: Int): List<SuperHero> =
-            givenThereAreSomeSuperHeroes(numberOfAvengers, true)
+            givenThereAreSomeSuperHeroes(numberOfAvengers, avengers = true)
 
     private fun givenThereAreSomeSuperHeroes(numberOfSuperHeroes: Int = ANY_NUMBER_OF_SUPER_HEROES, avengers: Boolean = false): List<SuperHero> {
         val superHeroes = LinkedList<SuperHero>()
-        for (i in 0 until numberOfSuperHeroes) {
-            val superHeroName = "SuperHero - " + i
+        IntRange(0, numberOfSuperHeroes).map {
+            val superHeroName = "SuperHero - " + it
             val superHeroPhoto = "https://i.annihil.us/u/prod/marvel/i/mg/c/60/55b6a28ef24fa.jpg"
-            val superHeroDescription = "Description Super Hero - " + i
+            val superHeroDescription = "Description Super Hero - " + it
             val superHero = SuperHero(superHeroName, superHeroPhoto, avengers, superHeroDescription)
             superHeroes.add(superHero)
             on(repository.getByName(superHeroName)).thenReturn(superHero)
@@ -146,11 +150,7 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
     }
 
     private fun givenThereAreNoSuperHeroes() {
-        on(repository.getAllSuperHeroes()).thenReturn(emptyList<SuperHero>())
-    }
-
-    companion object {
-        private val ANY_NUMBER_OF_SUPER_HEROES = 10
+        on(repository.getAllSuperHeroes()).thenReturn(emptyList())
     }
 
     override val testDependencies = Kodein.Module(allowSilentOverride = true) {
