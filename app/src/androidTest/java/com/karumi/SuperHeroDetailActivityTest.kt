@@ -2,7 +2,6 @@ package com.karumi
 
 import android.os.Bundle
 import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.IdlingRegistry
 import android.support.test.espresso.action.ViewActions.scrollTo
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -19,7 +18,6 @@ import com.karumi.mockito.on
 import com.karumi.ui.view.SuperHeroDetailActivity
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
-import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -28,14 +26,6 @@ import org.mockito.Mock
 class SuperHeroDetailActivityTests : AcceptanceTest<SuperHeroDetailActivity>(SuperHeroDetailActivity::class.java) {
 
     @Mock lateinit var repository: SuperHeroRepository
-
-    @After
-    fun tearDown() {
-        val idlingResources = IdlingRegistry.getInstance().resources
-        for (resource in idlingResources) {
-            IdlingRegistry.getInstance().unregister(resource)
-        }
-    }
 
     @Test
     fun showsSuperHeroNameAsToolbarTitle() {
