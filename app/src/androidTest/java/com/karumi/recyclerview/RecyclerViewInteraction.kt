@@ -27,7 +27,7 @@ class RecyclerViewInteraction<A> private constructor(
     }
 
     interface ItemViewAssertion<in A> {
-        fun check(item: A, view: View, e: NoMatchingViewException)
+        fun check(item: A, view: View, e: NoMatchingViewException?)
     }
 
     companion object {

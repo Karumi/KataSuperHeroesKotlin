@@ -8,12 +8,14 @@ import android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtP
 import android.support.test.espresso.intent.Intents.intended
 import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra
-import android.support.test.espresso.intent.rule.IntentsTestRule
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import com.github.salomonbrys.kodein.Kodein
+import com.github.salomonbrys.kodein.bind
+import com.github.salomonbrys.kodein.instance
 import com.karumi.data.repository.SuperHeroRepository
 import com.karumi.domain.model.SuperHero
 import com.karumi.matchers.RecyclerViewItemsCountMatcher.Companion.recyclerViewHasItemCount
@@ -23,41 +25,20 @@ import com.karumi.ui.view.MainActivity
 import com.karumi.ui.view.SuperHeroDetailActivity
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.MockitoAnnotations
 import java.util.*
 
 
 @RunWith(AndroidJUnit4::class)
-class MainActivityTest {
+class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) {
 
-    @Rule
-    @JvmField
-    var activityRule: IntentsTestRule<MainActivity> = IntentsTestRule(MainActivity::class.java, true, false)
-
-    @Mock internal lateinit var repository: SuperHeroRepository
-
-    @Before
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-    }
+    @Mock lateinit var repository: SuperHeroRepository
 
     @Test
     fun showsEmptyCaseIfThereAreNoSuperHeroes() {
         givenThereAreNoSuperHeroes()
-
-        startActivity()
-
-        onView(withText("¯\\_(ツ)_/¯")).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun doesNotShowTheEmptyCaseIfThereAreSuperHeroes() {
-        givenThereAreSuperHeroes()
 
         startActivity()
 
@@ -73,7 +54,7 @@ class MainActivityTest {
         RecyclerViewInteraction.onRecyclerView<SuperHero>(withId(R.id.recycler_view))
                 .withItems(superHeroes)
                 .check(object : RecyclerViewInteraction.ItemViewAssertion<SuperHero> {
-                    override fun check(item: SuperHero, view: View, e: NoMatchingViewException) {
+                    override fun check(item: SuperHero, view: View, e: NoMatchingViewException?) {
                         matches(hasDescendant(withText(item.name))).check(view, e)
                     }
                 })
@@ -88,7 +69,7 @@ class MainActivityTest {
         RecyclerViewInteraction.onRecyclerView<SuperHero>(withId(R.id.recycler_view))
                 .withItems(superHeroes)
                 .check(object : RecyclerViewInteraction.ItemViewAssertion<SuperHero> {
-                    override fun check(item: SuperHero, view: View, e: NoMatchingViewException) {
+                    override fun check(item: SuperHero, view: View, e: NoMatchingViewException?) {
                         matches(hasDescendant(allOf<View>(withId(R.id.iv_avengers_badge),
                                 withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))).check(view, e)
                     }
@@ -104,7 +85,7 @@ class MainActivityTest {
         RecyclerViewInteraction.onRecyclerView<SuperHero>(withId(R.id.recycler_view))
                 .withItems(superHeroes)
                 .check(object : RecyclerViewInteraction.ItemViewAssertion<SuperHero> {
-                    override fun check(item: SuperHero, view: View, e: NoMatchingViewException) {
+                    override fun check(item: SuperHero, view: View, e: NoMatchingViewException?) {
                         matches(hasDescendant(allOf<View>(withId(R.id.iv_avengers_badge),
                                 withEffectiveVisibility(ViewMatchers.Visibility.GONE)))).check(view, e)
                     }
@@ -153,10 +134,6 @@ class MainActivityTest {
                 matches(recyclerViewHasItemCount(ANY_NUMBER_OF_SUPER_HEROES)))
     }
 
-    private fun givenThereAreSuperHeroes() {
-        givenThereAreSomeSuperHeroes(100)
-    }
-
     private fun givenThereAreSomeAvengers(numberOfAvengers: Int): List<SuperHero> =
             givenThereAreSomeSuperHeroes(numberOfAvengers, true)
 
@@ -178,9 +155,11 @@ class MainActivityTest {
         on(repository.getAllSuperHeroes()).thenReturn(emptyList<SuperHero>())
     }
 
-    private fun startActivity(): MainActivity = activityRule.launchActivity(null)
-
     companion object {
         private val ANY_NUMBER_OF_SUPER_HEROES = 10
+    }
+
+    override val testDependencies = Kodein.Module(allowSilentOverride = true) {
+        bind<SuperHeroRepository>() with instance(repository)
     }
 }

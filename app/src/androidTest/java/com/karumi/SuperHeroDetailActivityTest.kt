@@ -1,13 +1,15 @@
 package com.karumi
 
-import android.content.Intent
+import android.os.Bundle
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.IdlingRegistry
 import android.support.test.espresso.action.ViewActions.scrollTo
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import com.github.salomonbrys.kodein.Kodein
+import com.github.salomonbrys.kodein.bind
+import com.github.salomonbrys.kodein.instance
 import com.karumi.data.repository.SuperHeroRepository
 import com.karumi.domain.model.SuperHero
 import com.karumi.matchers.ToolbarMatcher.onToolbarWithTitle
@@ -16,27 +18,14 @@ import com.karumi.ui.view.SuperHeroDetailActivity
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.junit.After
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.MockitoAnnotations
 
 @RunWith(AndroidJUnit4::class)
-class SuperHeroDetailActivityTests {
-
-    @Rule
-    @JvmField
-    var activityRule: ActivityTestRule<SuperHeroDetailActivity> =
-            ActivityTestRule(SuperHeroDetailActivity::class.java, true, false)
+class SuperHeroDetailActivityTests : AcceptanceTest<SuperHeroDetailActivity>(SuperHeroDetailActivity::class.java) {
 
     @Mock lateinit var repository: SuperHeroRepository
-
-    @Before
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-    }
 
     @After
     fun tearDown() {
@@ -115,12 +104,16 @@ class SuperHeroDetailActivityTests {
     }
 
     private fun startActivity(superHero: SuperHero): SuperHeroDetailActivity {
-        val intent = Intent()
-        intent.putExtra("super_hero_name_key", superHero.name)
-        return activityRule.launchActivity(intent)
+        val args = Bundle()
+        args.putString("super_hero_name_key", superHero.name)
+        return startActivity(args)
     }
 
     private fun scrollToView(viewId: Int) {
         onView(withId(viewId)).perform(scrollTo())
+    }
+
+    override val testDependencies = Kodein.Module(allowSilentOverride = true) {
+        bind<SuperHeroRepository>() with instance(repository)
     }
 }
