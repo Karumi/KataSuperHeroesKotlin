@@ -120,3 +120,4 @@ limitations under the License.
 [findingUIViews]: http://www.adavis.info/2015/12/testing-tricks-2-finding-ui-views.html?utm_source=Android+Weekly&utm_campaign=9ed0cecaff-Android_Weekly_186&utm_medium=email&utm_term=0_4eb677ad19-9ed0cecaff-337845529
 [toolbarMatcher]: http://blog.sqisland.com/2015/05/espresso-match-toolbar-title.html
 [kataSuperHeroesJava]: https://github.com/Karumi/KataSuperHeroesAndroid
+[Kodein]: https://github.com/SalomonBrys/Kodein
