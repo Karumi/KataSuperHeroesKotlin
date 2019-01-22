@@ -8,6 +8,8 @@ import android.support.test.espresso.intent.rule.IntentsTestRule
 import android.support.test.filters.LargeTest
 import android.support.test.runner.AndroidJUnit4
 import com.github.salomonbrys.kodein.Kodein
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.resetMain
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -24,6 +26,7 @@ abstract class AcceptanceTest<T : Activity>(clazz: Class<T>) {
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
+        Dispatchers.resetMain()
         val app = InstrumentationRegistry.getInstrumentation().targetContext.asApp()
         app.resetInjection()
         app.overrideModule = testDependencies

@@ -43,7 +43,6 @@ class SuperHeroDetailActivity : BaseActivity(), SuperHeroDetailPresenter.View {
 
     override fun showLoading() {
         progress_bar.visibility = View.VISIBLE
-        progress_bar.clearAnimation()
     }
 
     override fun hideLoading() {
