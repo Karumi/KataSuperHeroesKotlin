@@ -14,8 +14,8 @@ import com.github.salomonbrys.kodein.instance
 import com.karumi.data.repository.SuperHeroRepository
 import com.karumi.domain.model.SuperHero
 import com.karumi.matchers.ToolbarMatcher.onToolbarWithTitle
-import com.karumi.mockito.on
 import com.karumi.ui.view.SuperHeroDetailActivity
+import com.nhaarman.mockitokotlin2.whenever
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.junit.Test
@@ -94,7 +94,7 @@ class SuperHeroDetailActivityTests :
         val superHeroPhoto = "https://i.annihil.us/u/prod/marvel/i/mg/c/60/55b6a28ef24fa.jpg"
         val superHeroDescription = "Super Hero Description"
         val superHero = SuperHero(superHeroName, superHeroPhoto, isAvenger, superHeroDescription)
-        on(repository.getByName(superHeroName)).thenReturn(superHero)
+        whenever(repository.getByName(superHeroName)).thenReturn(superHero)
         return superHero
     }
 

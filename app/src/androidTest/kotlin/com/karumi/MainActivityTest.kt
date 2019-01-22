@@ -22,10 +22,10 @@ import com.github.salomonbrys.kodein.instance
 import com.karumi.data.repository.SuperHeroRepository
 import com.karumi.domain.model.SuperHero
 import com.karumi.matchers.RecyclerViewItemsCountMatcher.Companion.recyclerViewHasItemCount
-import com.karumi.mockito.on
 import com.karumi.recyclerview.RecyclerViewInteraction
 import com.karumi.ui.view.MainActivity
 import com.karumi.ui.view.SuperHeroDetailActivity
+import com.nhaarman.mockitokotlin2.whenever
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.junit.Test
@@ -36,10 +36,11 @@ import org.mockito.Mock
 class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) {
 
     companion object {
-        private val ANY_NUMBER_OF_SUPER_HEROES = 10
+        private const val ANY_NUMBER_OF_SUPER_HEROES = 10
     }
 
-    @Mock lateinit var repository: SuperHeroRepository
+    @Mock
+    lateinit var repository: SuperHeroRepository
 
     @Test
     fun showsEmptyCaseIfThereAreNoSuperHeroes() {
@@ -57,8 +58,13 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
         startActivity()
 
         RecyclerViewInteraction.onRecyclerView<SuperHero>(withId(R.id.recycler_view))
-                .withItems(superHeroes)
-                .check({ (name), view, exception -> matches(hasDescendant(withText(name))).check(view, exception) })
+            .withItems(superHeroes)
+            .check { (name), view, exception ->
+                matches(hasDescendant(withText(name))).check(
+                    view,
+                    exception
+                )
+            }
     }
 
     @Test
@@ -68,11 +74,17 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
         startActivity()
 
         RecyclerViewInteraction.onRecyclerView<SuperHero>(withId(R.id.recycler_view))
-                .withItems(superHeroes)
-                .check({ _, view, exception ->
-                    matches(hasDescendant(allOf<View>(withId(R.id.iv_avengers_badge),
-                            withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))).check(view, exception)
-                })
+            .withItems(superHeroes)
+            .check { _, view, exception ->
+                matches(
+                    hasDescendant(
+                        allOf<View>(
+                            withId(R.id.iv_avengers_badge),
+                            withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)
+                        )
+                    )
+                ).check(view, exception)
+            }
     }
 
     @Test
@@ -82,11 +94,17 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
         startActivity()
 
         RecyclerViewInteraction.onRecyclerView<SuperHero>(withId(R.id.recycler_view))
-                .withItems(superHeroes)
-                .check({ _, view, exception ->
-                    matches(hasDescendant(allOf<View>(withId(R.id.iv_avengers_badge),
-                            withEffectiveVisibility(ViewMatchers.Visibility.GONE)))).check(view, exception)
-                })
+            .withItems(superHeroes)
+            .check { _, view, exception ->
+                matches(
+                    hasDescendant(
+                        allOf<View>(
+                            withId(R.id.iv_avengers_badge),
+                            withEffectiveVisibility(ViewMatchers.Visibility.GONE)
+                        )
+                    )
+                ).check(view, exception)
+            }
     }
 
     @Test
@@ -114,7 +132,7 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
         startActivity()
 
         onView(withId(R.id.recycler_view))
-                .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(superHeroIndex, click()))
+            .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(superHeroIndex, click()))
 
         val superHeroSelected = superHeroes[superHeroIndex]
         intended(hasComponent(SuperHeroDetailActivity::class.java.canonicalName))
@@ -128,28 +146,32 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
         startActivity()
 
         onView(withId(R.id.recycler_view)).check(
-                matches(recyclerViewHasItemCount(ANY_NUMBER_OF_SUPER_HEROES)))
+            matches(recyclerViewHasItemCount(ANY_NUMBER_OF_SUPER_HEROES))
+        )
     }
 
     private fun givenThereAreSomeAvengers(numberOfAvengers: Int): List<SuperHero> =
-            givenThereAreSomeSuperHeroes(numberOfAvengers, avengers = true)
+        givenThereAreSomeSuperHeroes(numberOfAvengers, avengers = true)
 
-    private fun givenThereAreSomeSuperHeroes(numberOfSuperHeroes: Int = ANY_NUMBER_OF_SUPER_HEROES, avengers: Boolean = false): List<SuperHero> {
+    private fun givenThereAreSomeSuperHeroes(
+        numberOfSuperHeroes: Int = ANY_NUMBER_OF_SUPER_HEROES,
+        avengers: Boolean = false
+    ): List<SuperHero> {
         val superHeroes = IntRange(0, numberOfSuperHeroes - 1).map {
-            val superHeroName = "SuperHero - " + it
+            val superHeroName = "SuperHero - $it"
             val superHeroPhoto = "https://i.annihil.us/u/prod/marvel/i/mg/c/60/55b6a28ef24fa.jpg"
-            val superHeroDescription = "Description Super Hero - " + it
+            val superHeroDescription = "Description Super Hero - $it"
             val superHero = SuperHero(superHeroName, superHeroPhoto, avengers, superHeroDescription)
             superHero
         }
 
-        superHeroes.forEach { on(repository.getByName(it.name)).thenReturn(it) }
-        on(repository.getAllSuperHeroes()).thenReturn(superHeroes)
+        superHeroes.forEach { whenever(repository.getByName(it.name)).thenReturn(it) }
+        whenever(repository.getAllSuperHeroes()).thenReturn(superHeroes)
         return superHeroes
     }
 
     private fun givenThereAreNoSuperHeroes() {
-        on(repository.getAllSuperHeroes()).thenReturn(emptyList())
+        whenever(repository.getAllSuperHeroes()).thenReturn(emptyList())
     }
 
     override val testDependencies = Kodein.Module(allowSilentOverride = true) {

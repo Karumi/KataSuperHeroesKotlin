@@ -11,7 +11,7 @@ class RecyclerViewInteraction<A> private constructor(private val viewMatcher: Ma
 
     companion object {
         fun <A> onRecyclerView(viewMatcher: Matcher<View>): RecyclerViewInteraction<A> =
-                RecyclerViewInteraction(viewMatcher)
+            RecyclerViewInteraction(viewMatcher)
     }
 
     private lateinit var items: List<A>
@@ -24,8 +24,8 @@ class RecyclerViewInteraction<A> private constructor(private val viewMatcher: Ma
     fun check(assertion: (item: A, view: View, e: NoMatchingViewException?) -> Unit): RecyclerViewInteraction<A> {
         items.indices.map {
             onView(viewMatcher)
-                    .perform(scrollToPosition<RecyclerView.ViewHolder>(it))
-                    .check(RecyclerItemViewAssertion(it, items[it], assertion))
+                .perform(scrollToPosition<RecyclerView.ViewHolder>(it))
+                .check(RecyclerItemViewAssertion(it, items[it], assertion))
         }
         return this
     }

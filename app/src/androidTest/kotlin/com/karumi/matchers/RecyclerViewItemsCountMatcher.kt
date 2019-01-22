@@ -9,7 +9,8 @@ import org.hamcrest.Matcher
 class RecyclerViewItemsCountMatcher(private val expectedItemCount: Int) : BaseMatcher<View>() {
 
     companion object {
-        fun recyclerViewHasItemCount(itemCount: Int): Matcher<View> = RecyclerViewItemsCountMatcher(itemCount)
+        fun recyclerViewHasItemCount(itemCount: Int): Matcher<View> =
+            RecyclerViewItemsCountMatcher(itemCount)
     }
 
     override fun matches(item: Any): Boolean {

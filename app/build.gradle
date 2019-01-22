@@ -10,7 +10,11 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "com.github.tmurakami.dexopener.DexOpenerAndroidJUnitRunner"
+        testInstrumentationRunner "com.karumi.TestRunner"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
         release {
@@ -39,19 +43,22 @@ dependencies {
     implementation "com.github.salomonbrys.kodein:kodein-android:4.1.0"
     implementation "com.github.salomonbrys.kodein:kodein-conf:4.1.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "co.metalab.asyncawait:asyncawait:1.0.0"
     implementation "com.squareup.picasso:picasso:2.5.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.0"
 
     testImplementation "junit:junit:4.12"
 
-    androidTestImplementation "org.mockito:mockito-android:2.23.0"
-    androidTestImplementation "org.mockito:mockito-core:2.23.4"
+    testImplementation "org.mockito:mockito-core:2.23.4"
+    androidTestImplementation "org.mockito:mockito-android:2.23.4"
+    androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
+    androidTestImplementation "com.github.tmurakami:dexopener:2.0.0"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
-    androidTestImplementation("com.android.support.test.espresso:espresso-contrib:3.0.1") {
+    androidTestImplementation("com.android.support.test.espresso:espresso-contrib:3.0.2") {
         exclude group: "com.android.support"
     }
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.2"
-    androidTestImplementation "com.github.tmurakami:dexopener:0.12.0"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.1.0"
 }
 
 configurations.all {
@@ -70,4 +77,8 @@ task ktlintFormat(type: JavaExec) {
     main = "com.github.shyiko.ktlint.Main"
     classpath = configurations.ktlint
     args "-F", "src/**/*.kt"
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile).all {
+    kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"]
 }

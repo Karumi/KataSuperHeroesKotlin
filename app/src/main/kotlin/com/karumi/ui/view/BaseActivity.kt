@@ -35,6 +35,7 @@ abstract class BaseActivity : KodeinAppCompatActivity(), LifecyclePublisher by l
     }
 
     override fun onDestroy() {
+        destroy()
         unregister(presenter)
         super.onDestroy()
     }
