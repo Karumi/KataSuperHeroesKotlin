@@ -7,8 +7,9 @@ import com.karumi.domain.usecase.GetSuperHeroes
 import com.karumi.ui.LifecycleSubscriber
 
 class SuperHeroesPresenter(
-        view: View,
-        private val getSuperHeroes: GetSuperHeroes) : LifecycleSubscriber {
+    view: View,
+    private val getSuperHeroes: GetSuperHeroes
+) : LifecycleSubscriber {
 
     private val view: View? by weak(view)
 

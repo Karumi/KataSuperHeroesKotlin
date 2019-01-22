@@ -7,9 +7,10 @@ import com.karumi.domain.usecase.GetSuperHeroByName
 import com.karumi.ui.LifecycleSubscriber
 
 class SuperHeroDetailPresenter(
-        view: View,
-        private val getSuperHeroByName: GetSuperHeroByName) :
-        LifecycleSubscriber {
+    view: View,
+    private val getSuperHeroByName: GetSuperHeroByName
+) :
+    LifecycleSubscriber {
 
     private val view: View? by weak(view)
 
@@ -40,5 +41,4 @@ class SuperHeroDetailPresenter(
         fun hideLoading()
         fun showSuperHero(superHero: SuperHero)
     }
-
 }

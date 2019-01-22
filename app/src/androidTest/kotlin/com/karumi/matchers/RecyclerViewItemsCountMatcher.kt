@@ -14,7 +14,7 @@ class RecyclerViewItemsCountMatcher(private val expectedItemCount: Int) : BaseMa
 
     override fun matches(item: Any): Boolean {
         val recyclerView = item as RecyclerView
-        return recyclerView.adapter.itemCount == expectedItemCount
+        return recyclerView.adapter?.itemCount == expectedItemCount
     }
 
     override fun describeTo(description: Description) {

@@ -23,9 +23,11 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 
 @RunWith(AndroidJUnit4::class)
-class SuperHeroDetailActivityTests : AcceptanceTest<SuperHeroDetailActivity>(SuperHeroDetailActivity::class.java) {
+class SuperHeroDetailActivityTests :
+    AcceptanceTest<SuperHeroDetailActivity>(SuperHeroDetailActivity::class.java) {
 
-    @Mock lateinit var repository: SuperHeroRepository
+    @Mock
+    lateinit var repository: SuperHeroRepository
 
     @Test
     fun showsSuperHeroNameAsToolbarTitle() {
@@ -53,7 +55,8 @@ class SuperHeroDetailActivityTests : AcceptanceTest<SuperHeroDetailActivity>(Sup
         scrollToView(R.id.tv_super_hero_name)
 
         onView(allOf(withId(R.id.tv_super_hero_name), withText(superHero.name))).check(
-                matches(isDisplayed()))
+            matches(isDisplayed())
+        )
     }
 
     @Test
