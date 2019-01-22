@@ -110,7 +110,7 @@
             android:text="¯\\_(ツ)_/¯"
             android:textColor="@android:color/white"
             android:visibility="gone"
-            />
+            tools:ignore="HardcodedText"/>
 
     </RelativeLayout>
 
