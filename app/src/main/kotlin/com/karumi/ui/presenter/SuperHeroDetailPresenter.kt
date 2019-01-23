@@ -1,15 +1,19 @@
 package com.karumi.ui.presenter
 
-import co.metalab.asyncawait.async
 import com.karumi.common.weak
 import com.karumi.domain.model.SuperHero
 import com.karumi.domain.usecase.GetSuperHeroByName
 import com.karumi.ui.LifecycleSubscriber
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class SuperHeroDetailPresenter(
-        view: View,
-        private val getSuperHeroByName: GetSuperHeroByName) :
-        LifecycleSubscriber {
+    view: View,
+    private val getSuperHeroByName: GetSuperHeroByName
+) : LifecycleSubscriber, CoroutineScope by MainScope() {
 
     private val view: View? by weak(view)
 
@@ -28,8 +32,12 @@ class SuperHeroDetailPresenter(
         refreshSuperHeroes()
     }
 
-    private fun refreshSuperHeroes() = async {
-        val result = await { getSuperHeroByName(name) }
+    override fun destroy() {
+        cancel()
+    }
+
+    private fun refreshSuperHeroes() = launch {
+        val result = coroutineScope { getSuperHeroByName(name) }
         view?.hideLoading()
         view?.showSuperHero(result)
     }
@@ -40,5 +48,4 @@ class SuperHeroDetailPresenter(
         fun hideLoading()
         fun showSuperHero(superHero: SuperHero)
     }
-
 }

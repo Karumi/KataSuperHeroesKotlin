@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.super_hero_detail_activity.*
 class SuperHeroDetailActivity : BaseActivity(), SuperHeroDetailPresenter.View {
 
     companion object {
-        private val SUPER_HERO_NAME_KEY = "super_hero_name_key"
+        private const val SUPER_HERO_NAME_KEY = "super_hero_name_key"
 
         fun open(activity: Activity, superHeroName: String) {
             val intent = Intent(activity, SuperHeroDetailActivity::class.java)
@@ -52,8 +52,7 @@ class SuperHeroDetailActivity : BaseActivity(), SuperHeroDetailPresenter.View {
     override fun showSuperHero(superHero: SuperHero) {
         tv_super_hero_name.text = superHero.name
         tv_super_hero_description.text = superHero.description
-        iv_avengers_badge.visibility =
-            if (superHero.isAvenger) View.VISIBLE else View.GONE
+        iv_avengers_badge.visibility = if (superHero.isAvenger) View.VISIBLE else View.GONE
         iv_super_hero_photo.setImageBackground(superHero.photo)
     }
 
