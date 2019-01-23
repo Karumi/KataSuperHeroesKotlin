@@ -21,6 +21,10 @@ class LifecycleLinker : LifecyclePublisher {
     override fun initialize() {
         receivers.forEach(LifecycleSubscriber::initialize)
     }
+
+    override fun destroy() {
+        receivers.forEach(LifecycleSubscriber::destroy)
+    }
 }
 
 interface LifecyclePublisher {
@@ -28,9 +32,11 @@ interface LifecyclePublisher {
     fun register(subscriber: LifecycleSubscriber)
     fun unregister(subscriber: LifecycleSubscriber)
     fun update()
+    fun destroy()
 }
 
 interface LifecycleSubscriber {
     fun initialize() {}
     fun update() {}
+    fun destroy() {}
 }

@@ -63,10 +63,11 @@ class MainActivity : BaseActivity(), SuperHeroesPresenter.View {
 
     override val activityModules = Module(allowSilentOverride = true) {
         bind<SuperHeroesPresenter>() with provider {
-            SuperHeroesPresenter(this@MainActivity,
-                    instance())
+            SuperHeroesPresenter(
+                this@MainActivity,
+                instance()
+            )
         }
         bind<GetSuperHeroes>() with provider { GetSuperHeroes(instance()) }
     }
 }
-
