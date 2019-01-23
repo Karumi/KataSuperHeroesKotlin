@@ -9,8 +9,8 @@ import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.instance
 import com.karumi.data.repository.SuperHeroRepository
-import com.karumi.mockito.on
 import com.karumi.ui.view.MainActivity
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -18,7 +18,8 @@ import org.mockito.Mock
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) {
 
-    @Mock lateinit var repository: SuperHeroRepository
+    @Mock
+    lateinit var repository: SuperHeroRepository
 
     @Test
     fun showsEmptyCaseIfThereAreNoSuperHeroes() {
@@ -30,7 +31,7 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
     }
 
     private fun givenThereAreNoSuperHeroes() {
-        on(repository.getAllSuperHeroes()).thenReturn(emptyList())
+        whenever(repository.getAllSuperHeroes()).thenReturn(emptyList())
     }
 
     override val testDependencies = Kodein.Module(allowSilentOverride = true) {

@@ -1,15 +1,22 @@
 package com.karumi.ui.presenter
 
-import co.metalab.asyncawait.async
+import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
+import android.arch.lifecycle.Lifecycle.Event.ON_RESUME
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.OnLifecycleEvent
+import com.karumi.common.async
 import com.karumi.common.weak
 import com.karumi.domain.model.SuperHero
 import com.karumi.domain.usecase.GetSuperHeroByName
-import com.karumi.ui.LifecycleSubscriber
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class SuperHeroDetailPresenter(
-        view: View,
-        private val getSuperHeroByName: GetSuperHeroByName) :
-        LifecycleSubscriber {
+    view: View,
+    private val getSuperHeroByName: GetSuperHeroByName
+) : LifecycleObserver, CoroutineScope by MainScope() {
 
     private val view: View? by weak(view)
 
@@ -23,13 +30,19 @@ class SuperHeroDetailPresenter(
         }
     }
 
-    override fun update() {
+    @OnLifecycleEvent(ON_RESUME)
+    fun update() {
         view?.showLoading()
         refreshSuperHeroes()
     }
 
-    private fun refreshSuperHeroes() = async {
-        val result = await { getSuperHeroByName(name) }
+    @OnLifecycleEvent(ON_DESTROY)
+    fun destroy() {
+        cancel()
+    }
+
+    private fun refreshSuperHeroes() = launch {
+        val result = async { getSuperHeroByName(name) }
         view?.hideLoading()
         view?.showSuperHero(result)
     }
@@ -40,5 +53,4 @@ class SuperHeroDetailPresenter(
         fun hideLoading()
         fun showSuperHero(superHero: SuperHero)
     }
-
 }

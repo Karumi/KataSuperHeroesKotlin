@@ -1,24 +1,38 @@
 package com.karumi.ui.presenter
 
-import co.metalab.asyncawait.async
+import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
+import android.arch.lifecycle.Lifecycle.Event.ON_RESUME
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.OnLifecycleEvent
+import com.karumi.common.async
 import com.karumi.common.weak
 import com.karumi.domain.model.SuperHero
 import com.karumi.domain.usecase.GetSuperHeroes
-import com.karumi.ui.LifecycleSubscriber
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class SuperHeroesPresenter(
-        view: View,
-        private val getSuperHeroes: GetSuperHeroes) : LifecycleSubscriber {
+    view: View,
+    private val getSuperHeroes: GetSuperHeroes
+) : LifecycleObserver, CoroutineScope by MainScope() {
 
     private val view: View? by weak(view)
 
-    override fun update() {
+    @OnLifecycleEvent(ON_RESUME)
+    fun update() {
         view?.showLoading()
         refreshSuperHeroes()
     }
 
-    private fun refreshSuperHeroes() = async {
-        val result = await { getSuperHeroes() }
+    @OnLifecycleEvent(ON_DESTROY)
+    fun destroy() {
+        cancel()
+    }
+
+    private fun refreshSuperHeroes() = launch {
+        val result = async { getSuperHeroes() }
         view?.hideLoading()
         when {
             result.isEmpty() -> view?.showEmptyCase()
